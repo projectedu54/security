@@ -1,0 +1,2 @@
+INSERT INTO ROLE_TBL (id, name) VALUES (1, 'USER');
+INSERT INTO ROLE_TBL (id, name) VALUES (2, 'ADMIN');
