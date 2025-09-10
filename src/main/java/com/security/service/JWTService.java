@@ -1,6 +1,6 @@
 package com.security.service;
 
-import com.security.entity.Role;
+import com.security.dto.TokenPair;
 import com.security.entity.User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -16,9 +16,10 @@ import java.util.function.Function;
 @Service
 public class JWTService {
 
-    private SecretKey key;
-
     // You can also store this in application.properties
+    private SecretKey key;
+    private static final long ACCESS_EXP_MS = 1000 * 60 * 30; // 30 min
+    private static final long REFRESH_EXP_MS = 1000L * 60 * 60 * 24 * 30; // 30 days
     private static final String SECRET = "MySuperSecretKeyForJwtTokenThatShouldBeLongEnough123!";
 
     @PostConstruct
@@ -26,14 +27,26 @@ public class JWTService {
         key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(Base64.getEncoder().encodeToString(SECRET.getBytes())));
     }
 
-    public String generateToken(User user) {
-        return Jwts.builder()
-                .setSubject(user.getUsername())
-                .claim("roles", user.getRoles().stream().map(Role::getName).toList())
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24)) // 1 day
+    public TokenPair generateTokenPair(User user) {
+        Date now = new Date();
+        Date accessExp = new Date(now.getTime() + ACCESS_EXP_MS);
+        Date refreshExp = new Date(now.getTime() + REFRESH_EXP_MS);
+
+        String accessToken = Jwts.builder()
+                .setSubject(user.getUserName())
+                .setIssuedAt(now)
+                .setExpiration(accessExp)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
+
+        String refreshToken = Jwts.builder()
+                .setSubject(user.getUserName())
+                .setIssuedAt(now)
+                .setExpiration(refreshExp)
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+
+        return new TokenPair(accessToken, refreshToken, ACCESS_EXP_MS / 1000, REFRESH_EXP_MS / 1000);
     }
 
     public String extractUsername(String token) {
@@ -65,5 +78,19 @@ public class JWTService {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
+    }
+
+    // Validate token by checking signature and expiration
+    public boolean isTokenValid(String token) {
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKey(SECRET.getBytes())
+                    .build()
+                    .parseClaimsJws(token);
+            return true; // Valid token
+        } catch (JwtException | IllegalArgumentException e) {
+            // invalid token
+            return false;
+        }
     }
 }

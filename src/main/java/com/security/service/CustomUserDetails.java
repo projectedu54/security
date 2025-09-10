@@ -1,13 +1,12 @@
 package com.security.service;
 
 import com.security.entity.User;
-import com.security.entity.Role;
+import com.security.entity.UserRole;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class CustomUserDetails implements UserDetails {
 
@@ -21,12 +20,11 @@ public class CustomUserDetails implements UserDetails {
         return user;
     }
 
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return user.getRoles().stream()
-                .map(Role::getName)
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toSet());
+        UserRole userRole = user.getRole();  // single role
+        return List.of(new SimpleGrantedAuthority("ROLE_" +userRole.getRoleName()));
     }
 
     @Override
@@ -36,7 +34,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getUsername();
+        return user.getUserName();
     }
 
     @Override
