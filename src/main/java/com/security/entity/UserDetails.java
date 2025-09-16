@@ -2,6 +2,7 @@ package com.security.entity;
 
 import jakarta.persistence.*;
 import java.sql.Timestamp;
+import java.time.Instant;
 
 @Entity
 @Table(name = "user_details_tbl")
@@ -71,13 +72,15 @@ public class UserDetails {
     private Boolean isVerified = false;
 
     @Column(name = "verification_date")
-    private Timestamp verificationDate;
+    private Instant verificationDate;
 
     @Column(name = "created_at", updatable = false, insertable = false)
-    private Timestamp createdAt;
+    private Instant createdAt;
 
     @Column(name = "updated_at", insertable = false)
-    private Timestamp updatedAt;
+    private Instant updatedAt;
+
+
 
     public UserDetails() {
     }
@@ -85,8 +88,8 @@ public class UserDetails {
     public UserDetails(Integer userDetailId, String uid, User user, UserType userType, UserProfile userProfile,
                        String firstName, String middleName, String lastName, Gender sex, String idProof,
                        String contactNo, String email, String street, String area, String pin, String state,
-                       String country, Short profileCompletion, Boolean isVerified, Timestamp verificationDate,
-                       Timestamp createdAt, Timestamp updatedAt) {
+                       String country, Short profileCompletion, Boolean isVerified, Instant verificationDate,
+                       Instant createdAt, Instant updatedAt) {
         this.userDetailId = userDetailId;
         this.uid = uid;
         this.user = user;
@@ -265,27 +268,27 @@ public class UserDetails {
         this.isVerified = isVerified;
     }
 
-    public Timestamp getVerificationDate() {
+    public Instant getVerificationDate() {
         return verificationDate;
     }
 
-    public void setVerificationDate(Timestamp verificationDate) {
+    public void setVerificationDate(Instant verificationDate) {
         this.verificationDate = verificationDate;
     }
 
-    public Timestamp getCreatedAt() {
+    public Instant getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Timestamp createdAt) {
+    public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Timestamp getUpdatedAt() {
+    public Instant getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Timestamp updatedAt) {
+    public void setUpdatedAt(Instant updatedAt) {
         this.updatedAt = updatedAt;
     }
 

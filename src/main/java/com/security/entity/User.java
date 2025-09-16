@@ -2,7 +2,6 @@ package com.security.entity;
 
 import jakarta.persistence.*;
 import java.time.Instant;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "user_tbl")
@@ -23,7 +22,7 @@ public class User {
     private Boolean isActive = true;
 
     @Column(name = "last_login")
-    private LocalDateTime lastLogin;
+    private Instant lastLogin;
 
     @Column(name = "failed_login_attempts", nullable = false)
     private Integer failedLoginAttempts = 0;
@@ -31,7 +30,12 @@ public class User {
     @Column(name = "account_locked_until")
     private Instant accountLockedUntil;
 
-    @Column(name = "created_at", updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(
+            name = "created_at",
+            insertable = false,
+            updatable = false,
+            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
+    )
     private Instant createdAt;
 
     @Column(
@@ -40,7 +44,7 @@ public class User {
             updatable = false,
             columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
     )
-    private LocalDateTime updatedAt;
+    private Instant updatedAt;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_role_id_fk", nullable = false)
@@ -51,9 +55,9 @@ public class User {
     }
 
     // All-args constructor
-    public User(Integer id, String userName, String password, Boolean isActive, LocalDateTime lastLogin,
+    public User(Integer id, String userName, String password, Boolean isActive, Instant lastLogin,
                 Integer failedLoginAttempts, Instant accountLockedUntil, Instant createdAt,
-                LocalDateTime updatedAt, UserRole role) {
+                Instant updatedAt, UserRole role) {
         this.id = id;
         this.userName = userName;
         this.password = password;
@@ -100,11 +104,11 @@ public class User {
         this.isActive = isActive;
     }
 
-    public LocalDateTime getLastLogin() {
+    public Instant getLastLogin() {
         return lastLogin;
     }
 
-    public void setLastLogin(LocalDateTime lastLogin) {
+    public void setLastLogin(Instant lastLogin) {
         this.lastLogin = lastLogin;
     }
 
@@ -128,15 +132,17 @@ public class User {
         return createdAt;
     }
 
+    // Usually createdAt is not settable from code, but I’m adding for completeness
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getUpdatedAt() {
+    public Instant getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
+    // Usually updatedAt is managed by DB triggers, but setter is here if needed
+    public void setUpdatedAt(Instant updatedAt) {
         this.updatedAt = updatedAt;
     }
 

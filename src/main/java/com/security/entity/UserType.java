@@ -1,8 +1,11 @@
 package com.security.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
-import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 
 @Entity
@@ -27,13 +30,16 @@ public class UserType {
     @Column(name = "is_active", nullable = false)
     private Boolean isActive = true;
 
-    @Column(name = "created_at", updatable = false, insertable = false)
-    private Timestamp createdAt;
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Instant createdAt;
 
-    @Column(name = "updated_at", insertable = false)
-    private Timestamp updatedAt;
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
+    private Instant updatedAt;
 
     @OneToMany(mappedBy = "userType", fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<UserRole> roles;
 
     // No-args constructor
@@ -42,7 +48,7 @@ public class UserType {
 
     // All-args constructor
     public UserType(Integer id, UserChoice userChoice, String typeName, String description, Boolean isActive,
-                    Timestamp createdAt, Timestamp updatedAt, List<UserRole> roles) {
+                    Instant createdAt, Instant updatedAt, List<UserRole> roles) {
         this.id = id;
         this.userChoice = userChoice;
         this.typeName = typeName;
@@ -95,11 +101,11 @@ public class UserType {
         isActive = active;
     }
 
-    public Timestamp getCreatedAt() {
+    public Instant getCreatedAt() {
         return createdAt;
     }
 
-    public Timestamp getUpdatedAt() {
+    public Instant getUpdatedAt() {
         return updatedAt;
     }
 

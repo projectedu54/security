@@ -90,8 +90,10 @@ public class AuthController {
         // Reset failed attempts on successful login
         user.setFailedLoginAttempts(0);
         user.setAccountLockedUntil(null);
-        user.setLastLogin(LocalDateTime.now(ZoneId.of("Asia/Kolkata")));
-        user.setUpdatedAt(LocalDateTime.now(ZoneId.of("Asia/Kolkata")));
+
+        Instant nowInstant = Instant.now();
+        user.setLastLogin(nowInstant);
+        user.setUpdatedAt(nowInstant);
         userRepository.save(user);
 
         String clientIp = servletRequest.getHeader("X-Forwarded-For");

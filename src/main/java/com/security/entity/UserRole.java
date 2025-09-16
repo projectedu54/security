@@ -1,7 +1,11 @@
 package com.security.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import java.sql.Timestamp;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.Instant;
 import java.util.List;
 
 @Entity
@@ -22,14 +26,17 @@ public class UserRole {
     @Column(name = "is_active", nullable = false)
     private Boolean isActive = true;
 
-    @Column(name = "created_at", updatable = false, insertable = false)
-    private Timestamp createdAt;
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Instant createdAt;
 
-    @Column(name = "updated_at", insertable = false)
-    private Timestamp updatedAt;
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
+    private Instant updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_types_tbl_id_fk", nullable = false)
+    @JsonBackReference
     private UserType userType;
 
     @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
@@ -40,8 +47,8 @@ public class UserRole {
     }
 
     // All-args constructor
-    public UserRole(Integer id, String roleName, String description, Boolean isActive, Timestamp createdAt,
-                    Timestamp updatedAt, UserType userType, List<User> users) {
+    public UserRole(Integer id, String roleName, String description, Boolean isActive, Instant createdAt,
+                    Instant updatedAt, UserType userType, List<User> users) {
         this.id = id;
         this.roleName = roleName;
         this.description = description;
@@ -86,20 +93,12 @@ public class UserRole {
         this.isActive = isActive;
     }
 
-    public Timestamp getCreatedAt() {
+    public Instant getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Timestamp createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Timestamp getUpdatedAt() {
+    public Instant getUpdatedAt() {
         return updatedAt;
-    }
-
-    public void setUpdatedAt(Timestamp updatedAt) {
-        this.updatedAt = updatedAt;
     }
 
     public UserType getUserType() {

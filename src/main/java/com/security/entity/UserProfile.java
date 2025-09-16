@@ -1,8 +1,10 @@
 package com.security.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Entity
 @Table(
@@ -37,13 +39,13 @@ public class UserProfile {
     @Column(name = "profile_settings", columnDefinition = "JSON")
     private String profileSettings;
 
-    @Column(name = "created_at", nullable = false, updatable = false, insertable = false,
-            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime createdAt;
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Instant createdAt;
 
-    @Column(name = "updated_at", nullable = false, insertable = false,
-            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
-    private LocalDateTime updatedAt;
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
+    private Instant updatedAt;
 
     // No-args constructor
     public UserProfile() {}
@@ -51,7 +53,7 @@ public class UserProfile {
     // All-args constructor
     public UserProfile(Integer profileId, User user, Boolean activeProfile, Boolean primaryProfile,
                        Boolean switchProfile, String profileSettings,
-                       LocalDateTime createdAt, LocalDateTime updatedAt) {
+                       Instant createdAt, Instant updatedAt) {
         this.profileId = profileId;
         this.user = user;
         this.activeProfile = activeProfile;
@@ -112,11 +114,11 @@ public class UserProfile {
         this.profileSettings = profileSettings;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public Instant getCreatedAt() {
         return createdAt;
     }
 
-    public LocalDateTime getUpdatedAt() {
+    public Instant getUpdatedAt() {
         return updatedAt;
     }
 
@@ -128,8 +130,8 @@ public class UserProfile {
         private Boolean primaryProfile = false;
         private Boolean switchProfile = false;
         private String profileSettings;
-        private LocalDateTime createdAt;
-        private LocalDateTime updatedAt;
+        private Instant createdAt;
+        private Instant updatedAt;
 
         public Builder() {}
 
@@ -163,12 +165,12 @@ public class UserProfile {
             return this;
         }
 
-        public Builder createdAt(LocalDateTime createdAt) {
+        public Builder createdAt(Instant createdAt) {
             this.createdAt = createdAt;
             return this;
         }
 
-        public Builder updatedAt(LocalDateTime updatedAt) {
+        public Builder updatedAt(Instant updatedAt) {
             this.updatedAt = updatedAt;
             return this;
         }
