@@ -11,7 +11,6 @@ import com.security.repository.UserDetailsRepository;
 import com.security.repository.UserProfileRepository;
 import com.security.repository.UserRepository;
 import com.security.repository.UserTypeRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +19,6 @@ import java.sql.Timestamp;
 
 @RestController
 @RequestMapping("${project.name}/userDetails")
-@RequiredArgsConstructor
 public class UserDetailsController {
 
     private final UserRepository userRepository;
@@ -28,11 +26,22 @@ public class UserDetailsController {
     private final UserProfileRepository userProfileRepository;
     private final UserDetailsRepository userDetailsRepository;
 
+    // Constructor (manually added in place of @RequiredArgsConstructor)
+    public UserDetailsController(
+            UserRepository userRepository,
+            UserTypeRepository userTypeRepository,
+            UserProfileRepository userProfileRepository,
+            UserDetailsRepository userDetailsRepository
+    ) {
+        this.userRepository = userRepository;
+        this.userTypeRepository = userTypeRepository;
+        this.userProfileRepository = userProfileRepository;
+        this.userDetailsRepository = userDetailsRepository;
+    }
+
     @PostMapping
     public ResponseEntity<?> createUserDetails(@RequestBody UserDetailsRequest request) {
-
         try {
-
             // Fetch and validate foreign keys with custom exceptions
             User user = userRepository.findById(request.getUserId())
                     .orElseThrow(() -> new ResourceNotFoundException("Invalid user ID: " + request.getUserId()));
@@ -75,7 +84,7 @@ public class UserDetailsController {
             userDetailsRepository.save(userDetails);
 
             return ResponseEntity.ok("User details saved successfully.");
-        }catch (DataIntegrityViolationException ex) {
+        } catch (DataIntegrityViolationException ex) {
             String rootCause = ex.getRootCause() != null ? ex.getRootCause().getMessage() : ex.getMessage();
             if (rootCause != null && rootCause.contains("uk_uid")) {
                 throw new DuplicateResourceException("UID '" + request.getUid() + "' already exists.");

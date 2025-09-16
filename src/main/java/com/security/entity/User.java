@@ -1,18 +1,11 @@
 package com.security.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
-
 import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "user_tbl")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class User {
 
     @Id
@@ -29,10 +22,8 @@ public class User {
     @Column(name = "is_active", nullable = false)
     private Boolean isActive = true;
 
-
     @Column(name = "last_login")
     private LocalDateTime lastLogin;
-
 
     @Column(name = "failed_login_attempts", nullable = false)
     private Integer failedLoginAttempts = 0;
@@ -55,4 +46,105 @@ public class User {
     @JoinColumn(name = "user_role_id_fk", nullable = false)
     private UserRole role;
 
+    // No-args constructor
+    public User() {
+    }
+
+    // All-args constructor
+    public User(Integer id, String userName, String password, Boolean isActive, LocalDateTime lastLogin,
+                Integer failedLoginAttempts, Instant accountLockedUntil, Instant createdAt,
+                LocalDateTime updatedAt, UserRole role) {
+        this.id = id;
+        this.userName = userName;
+        this.password = password;
+        this.isActive = isActive;
+        this.lastLogin = lastLogin;
+        this.failedLoginAttempts = failedLoginAttempts;
+        this.accountLockedUntil = accountLockedUntil;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.role = role;
+    }
+
+    // Getters and Setters
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
+    }
+
+    public LocalDateTime getLastLogin() {
+        return lastLogin;
+    }
+
+    public void setLastLogin(LocalDateTime lastLogin) {
+        this.lastLogin = lastLogin;
+    }
+
+    public Integer getFailedLoginAttempts() {
+        return failedLoginAttempts;
+    }
+
+    public void setFailedLoginAttempts(Integer failedLoginAttempts) {
+        this.failedLoginAttempts = failedLoginAttempts;
+    }
+
+    public Instant getAccountLockedUntil() {
+        return accountLockedUntil;
+    }
+
+    public void setAccountLockedUntil(Instant accountLockedUntil) {
+        this.accountLockedUntil = accountLockedUntil;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public UserRole getRole() {
+        return role;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
+    }
 }

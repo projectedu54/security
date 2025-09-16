@@ -1,23 +1,18 @@
 package com.security.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(
-    name = "user_profile_tbl",
-    indexes = {
-        @Index(name = "idx_generic_user_id", columnList = "generic_user_id"),
-        @Index(name = "idx_active_profile", columnList = "active_profile"),
-        @Index(name = "idx_primary_profile", columnList = "primary_profile")
-    }
+        name = "user_profile_tbl",
+        indexes = {
+                @Index(name = "idx_generic_user_id", columnList = "generic_user_id"),
+                @Index(name = "idx_active_profile", columnList = "active_profile"),
+                @Index(name = "idx_primary_profile", columnList = "primary_profile")
+        }
 )
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class UserProfile {
 
     @Id
@@ -27,7 +22,7 @@ public class UserProfile {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "generic_user_id", nullable = false,
-                foreignKey = @ForeignKey(name = "fk_user_profile_user"))
+            foreignKey = @ForeignKey(name = "fk_user_profile_user"))
     private User user;
 
     @Column(name = "active_profile", nullable = false)
@@ -39,13 +34,8 @@ public class UserProfile {
     @Column(name = "switch_profile", nullable = false)
     private Boolean switchProfile = false;
 
-    // Option 1: Store JSON as plain string
     @Column(name = "profile_settings", columnDefinition = "JSON")
     private String profileSettings;
-
-    // Option 2: Use a POJO and convert JSON <-> Object (uncomment if needed)
-    // @Convert(converter = ProfileSettingsConverter.class)
-    // private ProfileSettings profileSettings;
 
     @Column(name = "created_at", nullable = false, updatable = false, insertable = false,
             columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
@@ -54,4 +44,137 @@ public class UserProfile {
     @Column(name = "updated_at", nullable = false, insertable = false,
             columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private LocalDateTime updatedAt;
+
+    // No-args constructor
+    public UserProfile() {}
+
+    // All-args constructor
+    public UserProfile(Integer profileId, User user, Boolean activeProfile, Boolean primaryProfile,
+                       Boolean switchProfile, String profileSettings,
+                       LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.profileId = profileId;
+        this.user = user;
+        this.activeProfile = activeProfile;
+        this.primaryProfile = primaryProfile;
+        this.switchProfile = switchProfile;
+        this.profileSettings = profileSettings;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
+    // Getters and Setters
+
+    public Integer getProfileId() {
+        return profileId;
+    }
+
+    public void setProfileId(Integer profileId) {
+        this.profileId = profileId;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Boolean getActiveProfile() {
+        return activeProfile;
+    }
+
+    public void setActiveProfile(Boolean activeProfile) {
+        this.activeProfile = activeProfile;
+    }
+
+    public Boolean getPrimaryProfile() {
+        return primaryProfile;
+    }
+
+    public void setPrimaryProfile(Boolean primaryProfile) {
+        this.primaryProfile = primaryProfile;
+    }
+
+    public Boolean getSwitchProfile() {
+        return switchProfile;
+    }
+
+    public void setSwitchProfile(Boolean switchProfile) {
+        this.switchProfile = switchProfile;
+    }
+
+    public String getProfileSettings() {
+        return profileSettings;
+    }
+
+    public void setProfileSettings(String profileSettings) {
+        this.profileSettings = profileSettings;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    // Builder pattern
+    public static class Builder {
+        private Integer profileId;
+        private User user;
+        private Boolean activeProfile = true;
+        private Boolean primaryProfile = false;
+        private Boolean switchProfile = false;
+        private String profileSettings;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
+
+        public Builder() {}
+
+        public Builder profileId(Integer profileId) {
+            this.profileId = profileId;
+            return this;
+        }
+
+        public Builder user(User user) {
+            this.user = user;
+            return this;
+        }
+
+        public Builder activeProfile(Boolean activeProfile) {
+            this.activeProfile = activeProfile;
+            return this;
+        }
+
+        public Builder primaryProfile(Boolean primaryProfile) {
+            this.primaryProfile = primaryProfile;
+            return this;
+        }
+
+        public Builder switchProfile(Boolean switchProfile) {
+            this.switchProfile = switchProfile;
+            return this;
+        }
+
+        public Builder profileSettings(String profileSettings) {
+            this.profileSettings = profileSettings;
+            return this;
+        }
+
+        public Builder createdAt(LocalDateTime createdAt) {
+            this.createdAt = createdAt;
+            return this;
+        }
+
+        public Builder updatedAt(LocalDateTime updatedAt) {
+            this.updatedAt = updatedAt;
+            return this;
+        }
+
+        public UserProfile build() {
+            return new UserProfile(profileId, user, activeProfile, primaryProfile, switchProfile, profileSettings, createdAt, updatedAt);
+        }
+    }
 }

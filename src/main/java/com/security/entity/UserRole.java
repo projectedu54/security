@@ -1,16 +1,11 @@
 package com.security.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
-
 import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
 @Table(name = "user_roles_tbl")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class UserRole {
 
     @Id
@@ -33,12 +28,93 @@ public class UserRole {
     @Column(name = "updated_at", insertable = false)
     private Timestamp updatedAt;
 
-    // FK to user_types_tbl
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_types_tbl_id_fk", nullable = false)
     private UserType userType;
 
-    // One role can be assigned to many users
     @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
     private List<User> users;
+
+    // No-args constructor
+    public UserRole() {
+    }
+
+    // All-args constructor
+    public UserRole(Integer id, String roleName, String description, Boolean isActive, Timestamp createdAt,
+                    Timestamp updatedAt, UserType userType, List<User> users) {
+        this.id = id;
+        this.roleName = roleName;
+        this.description = description;
+        this.isActive = isActive;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.userType = userType;
+        this.users = users;
+    }
+
+    // Getters and Setters
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
+    }
+
+    public Timestamp getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Timestamp getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Timestamp updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(UserType userType) {
+        this.userType = userType;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
 }

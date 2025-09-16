@@ -10,7 +10,6 @@ import com.security.repository.UserRepository;
 import com.security.repository.TokenRepository;
 import com.security.repository.UserRoleRepository;
 import com.security.service.JWTService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +21,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("${project.name}/auth")
-@RequiredArgsConstructor
 public class AuthController {
 
     private final UserRepository userRepository;
@@ -31,6 +29,22 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final JWTService jwtService;
     private final AuthProperties authProperties;
+
+    public AuthController(
+            UserRepository userRepository,
+            UserRoleRepository userRoleRepository,
+            TokenRepository tokenRepo,
+            PasswordEncoder passwordEncoder,
+            JWTService jwtService,
+            AuthProperties authProperties
+    ) {
+        this.userRepository = userRepository;
+        this.userRoleRepository = userRoleRepository;
+        this.tokenRepo = tokenRepo;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
+        this.authProperties = authProperties;
+    }
 
     @PostMapping("/register")
     public ResponseEntity<?> createUser(@RequestBody UserRequest request) {
